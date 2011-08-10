@@ -8,15 +8,24 @@ object Sex extends Enumeration {
 }
 
 object Power {
-  val powers = new HashMap[String, String] // power -> description
-  val secondaryPowers = new HashMap[String, String]  // [usage] Power.secondaryPowers += "regeneration" -> "heal faster than normal"
+  var powers = new HashMap[String, String] // power -> description
+  var secondaryPowers = new HashMap[String, String] // [usage] Power.secondaryPowers += "regeneration" -> "heal faster than normal"
 }
 
 import Sex._
 import Power._
 
 class Power(power: String) {
-  private var powers: List[String] = List()
+  private var powers: List[String] = List(power)
+  
+  def getPowers(): Unit = {
+    for(power <- this.powers) { 
+      println(power)
+    }
+  }
+  def addPower(power: String): Unit = {
+      this.powers = List(power) ++ this.powers
+  }
   def addPowers(power: String): List[String] = {
     if (Power.powers.get(power) == None)
       List()
@@ -32,19 +41,25 @@ abstract class Homosapien {
 }
 
 trait power extends Homosapien {
-  val power: List[Power] = List() //power name and description
+  var power: List[Power] = List() //power name and description
 }
 
 trait secondaryPower extends Homosapien {
-  val secondaryPower: List[Power] = List() //power name and description
+  var secondaryPower: List[Power] = List() //power name and description
 }
 
 class HomosapienSuperior(
-  val name:HashMap[String, String],
-  val sex:Sex
+  var name:HashMap[String, String],
+  var sex:Sex
 ) extends Homosapien with power with secondaryPower
 
 class HomosapienSuperiorSuperior(
-  val name:HashMap[String, String],
-  val sex:Sex
+  var name:HashMap[String, String],
+  var sex:Sex
 ) extends Homosapien with power
+
+val rogueName = HashMap("First Name" -> "Rogue")
+val rogue = new HomosapienSuperior(rogueName,female)
+val superStrength = new Power("Super Strength")
+rogue.power = List(superStrength)
+rogue.power(0).getPowers
